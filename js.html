@@ -6,6 +6,13 @@
 
 
     function crearTablaContactos(){
+
+        // borramos la tabla
+        eliminarTabla();
+
+        // crear loader
+        crearLoaderAnillo('divContactos');
+
         google.script.run
         .withSuccessHandler(crearTablaContactosCorrectamente)
         .withFailureHandler(crearTablaContactosError)
@@ -13,8 +20,6 @@
     }
 
     function crearTablaContactosCorrectamente(obj){
-        let tabla = document.getElementById('tablaContactos');
-        if(tabla) tabla.remove();
         
         tabla = document.createElement('table');
         tabla.id = 'tablaContactos';
@@ -53,11 +58,17 @@
 
         // mostrar notificación de OK
         crearNotificacion(NOTIFICACION_OK, 'Contactos obtenidos correctamente', 'Todo en orden');
+
+        // eliminaremos el loader
+        eliminarLoader();
     }
 
     function crearTablaContactosError(){
         // mostrar notificación de error
         crearNotificacion(NOTIFICACION_DANGER, 'No se han podido leer los contactos', 'ERROR');
+
+        // eliminaremos el loader
+        eliminarLoader();
     }
 
     function crearNotificacion(tipo, mensaje, titulo){
@@ -93,5 +104,36 @@
 
         // mostrar notificacion
         notificacion.show();
+    }
+
+    function crearLoader(elementoPadre){
+        eliminarLoader();
+        let loader = document.createElement('div');
+        loader.id = 'loader';
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        return document.getElementById(elementoPadre).appendChild(loader);
+    }
+
+    function crearLoaderPuntos(elementoPadre){
+        let loader = crearLoader(elementoPadre);
+        loader.classList.add('lds-ellipsis');
+    }
+
+    function crearLoaderAnillo(elementoPadre){
+        let loader = crearLoader(elementoPadre);
+        loader.classList.add('lds-ring');
+    }
+
+    function eliminarLoader(){
+        let loader = document.getElementById('loader');
+        if(loader) loader.remove();
+    }
+
+    function eliminarTabla(){
+        let tabla = document.getElementById('tablaContactos');
+        if(tabla) tabla.remove();
     }
 </script>
